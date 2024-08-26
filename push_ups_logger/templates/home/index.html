@@ -1,0 +1,219 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" href="//cdn.datatables.net/2.1.3/css/dataTables.dataTables.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="row">
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card daily-sales">
+                                    <div class="card-block">
+                                        <h6 class="mb-4">Welcome</h6>
+                                        <div class="row d-flex align-items-center">
+                                            <div class="col-9">
+                                                <h3 class="f-w-300 d-flex align-items-center m-b-0">{{ user.name }}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card Monthly-sales">
+                                    <div class="card-block">
+                                        <h6 class="mb-4">Total Pushups for Today</h6>
+                                        <div class="row d-flex align-items-center">
+                                            <div class="col-9">
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0">{{
+                                                    total_pushups_today }}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xl-4">
+                                <div class="card yearly-sales">
+                                    <div class="card-block">
+                                        <h6 class="mb-4">Your Total Workouts</h6>
+                                        <div class="row d-flex align-items-center">
+                                            <div class="col-9">
+                                                <h3 class="f-w-300 d-flex align-items-center m-b-0">{{
+                                                    user.workouts|length }}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chart for Number of Pushups vs Days -->
+                            <div class="col-xl-6 col-md-12 m-b-30">
+                                <div class="card card-event">
+                                    <div class="card-block">
+                                        <div class="row align-items-center justify-content-center">
+                                            <div class="col">
+                                                <h5 class="m-0">Pushups vs Days</h5>
+                                                <canvas id="dailyPushupsChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chart for Number of Pushups vs Months -->
+                            <div class="col-xl-6 col-md-12 m-b-30">
+                                <div class="card card-event">
+                                    <div class="card-block">
+                                        <div class="row align-items-center justify-content-center">
+                                            <div class="col">
+                                                <h5 class="m-0">Pushups vs Months</h5>
+                                                <canvas id="monthlyPushupsChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Total Workouts -->
+                            <div class="col-xl-8 col-md-12 m-b-30">
+
+                                <div class="card-block px-0 py-3">
+
+
+
+                                    <div class="tab-content">
+                                        <div class="table-responsive">
+
+                                            <table class="table table-hover" id="myTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No. </th>
+                                                        <th>Number of Push Ups</th>
+                                                        <th>Performed at</th>
+                                                        <th>Comment</th>
+                                                        <th>Action</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for workout in workouts %}
+                                                    <tr>
+                                                        <td>
+                                                            <h6 class="m-0"> {{ loop.index }}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="m-0">{{ workout.pushups }}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="m-0">{{ workout.date_posted.strftime('%m/%d/%Y')
+                                                                }}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="m-0 text-c-red">{{ workout.comment }}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="m-0 text-c-red">
+                                                                <a href="{{ url_for('main.update_workout', workout_id=workout.id)}}"
+                                                                    class="btn btn-info" role="button">Edit</a>
+                                                                <a href="{{ url_for('main.del_dash', workout_id=workout.id)}}"
+                                                                    class="btn btn-danger" role="button">Delete</a>
+
+                                                            </h6>
+                                                        </td>
+                                                    </tr>
+
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block javascripts %}
+
+<script src="//cdn.datatables.net/2.1.3/js/dataTables.min.js"></script>
+<script>
+    let table = new DataTable('#myTable', {
+        "pageLength": 4
+    });
+</script>
+
+
+
+
+<!-- JavaScript to handle chart rendering -->
+<script>
+    const dailyPushupsCtx = document.getElementById('dailyPushupsChart').getContext('2d');
+    const dailyPushupsChart = new Chart(dailyPushupsCtx, {
+        type: 'line',
+        data: {
+            labels: [{% for date, total in daily_totals.items() %}"{{ date }}",{% endfor %}],
+    datasets: [{
+        label: 'Number of Pushups',
+        data: [{% for date, total in daily_totals.items() %}{{ total }}, {% endfor %}],
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+    const monthlyPushupsCtx = document.getElementById('monthlyPushupsChart').getContext('2d');
+    const monthlyPushupsChart = new Chart(monthlyPushupsCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for month, total in monthly_totals.items() %}"{{ month }}",{% endfor %}],
+    datasets: [{
+        label: 'Number of Pushups',
+        data: [{% for month, total in monthly_totals.items() %}{{ total }}, {% endfor %}],
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+
+</script>
+
+
+
+
+{% endblock javascripts %} 

@@ -1,0 +1,89 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} add content {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+
+
+
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+
+
+                <div class="page-header">
+                    <div class="page-block">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <div class="page-header-title">
+                                    <h5 class="m-b-10"> Add New Workouts</h5>
+                                </div>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="javascript:">Add worouts</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript:">Add workout form</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                
+                
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Add workouts</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <h5>Enter the workout</h5>
+                                                <hr>
+                                                <div class="row">
+                
+                                                    <form method="POST" action="/new">
+                
+                                                        <div class="form-group">
+                                                            <label>Pushups</label>
+                                                            <input type="number" name="pushups"  class="form-control" placeholder="Number of Pushups" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Comments</label>
+                                                            <input type="text" name="comment" class="form-control" placeholder="Comments" required>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+
+{% endblock javascripts %}

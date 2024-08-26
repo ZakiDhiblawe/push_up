@@ -1,0 +1,107 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} add content {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" href="//cdn.datatables.net/2.1.3/css/dataTables.dataTables.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+<section class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+
+      <div class="pcoded-content">
+          <div class="pcoded-inner-content">
+              <!-- [ breadcrumb ] start -->
+              <div class="page-header">
+                  <div class="page-block">
+                      <div class="row align-items-center">
+                          <div class="col-md-12">
+                              <div class="page-header-title">
+                                  <h5 class="m-b-10">All your  workouts </h5>
+                              </div>
+                              <ul class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                  <li class="breadcrumb-item"><a href="#!">Tables</a></li>
+                                  <li class="breadcrumb-item"><a href="javascript:">workouts Tables</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>All  Workouts</h5>
+                        <span class="d-block m-t-5">All your workouts  <code>is</code> inside this table</span>
+                    </div>
+                    <div class="card-block table-border-style">
+                        <div class="table-responsive">
+                            <table class="table" id="myTable">
+                                <thead>
+                                    <tr>
+                                      <th>No. </th>
+                                      <th>Number of Push Ups</th>
+                                      <th>Performed at</th>
+                                      <th>Comment</th>
+                                      <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  {% for workout in workouts %}
+                                  <tr>
+                                    <td>
+                                      <h6 class="m-0"> {{ loop.index }}</h6>
+                                    </td>
+                                    <td>
+                                      <h6 class="m-0">{{ workout.pushups }}</h6>
+                                    </td>
+                                    <td>
+                                      <h6 class="m-0">{{ workout.date_posted.strftime('%m/%d/%Y') }}</h6>
+                                    </td>
+                                    <td>
+                                      <h6 class="m-0 text-c-red">{{ workout.comment }}</h6>
+                                    </td>
+                                    <td>
+                                      <h6 class="m-0 text-c-red">
+                                        <a href="{{ url_for('main.update_workout', workout_id=workout.id)}}" class="btn btn-info"
+                                          role="button">Edit</a>
+                                        <a href="{{ url_for('main.delete_workout', workout_id=workout.id)}}" class="btn btn-danger"
+                                          role="button">Delete</a>
+              
+                                      </h6>
+                                    </td>
+                                  </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+              </div></div></div></div></section>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/2.1.3/js/dataTables.min.js"></script>
+
+    <!-- Initialize DataTable -->
+    <script>
+      let table = new DataTable('#myTable', {
+          "pageLength": 6
+      });
+  </script>
+
+
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+{% endblock javascripts %}
+

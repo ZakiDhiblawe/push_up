@@ -1,0 +1,39 @@
+/* Add this to your CSS file */
+.valid {
+    color: rgb(17, 247, 17);
+}
+
+.invalid {
+    color: red;
+}
+
+input.form-control {
+    border-color: #ced4da;
+}
+
+input.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .25);
+}
+
+input.form-control.valid {
+    border-color: green;
+}
+
+input.form-control.invalid {
+    border-color: red;
+}
+
+#password-strength ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#password-strength ul li {
+    display: flex;
+    align-items: center;
+}
+
+#password-strength ul li i {
+    margin-right: 8px;
+}

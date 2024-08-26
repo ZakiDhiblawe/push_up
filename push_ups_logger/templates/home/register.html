@@ -1,0 +1,158 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
+<!-- animation css -->
+{% endblock stylesheets %}
+{% block content %}
+
+    <div class="auth-wrapper">
+        <form method="POST" action="/signup" onsubmit="return validateForm()">
+        <div class="auth-content">
+            <div class="auth-bg">
+                <span class="r"></span>
+                <span class="r s"></span>
+                <span class="r s"></span>
+                <span class="r"></span>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="feather icon-user-plus auth-icon"></i>
+                    </div>
+                    <h3 class="mb-4">Sign up</h3>
+                    
+                    <!-- Name Field -->
+                    <div class="input-group mb-3">
+                        <input type="text" name="name" class="form-control" placeholder="Name" required>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="input-group mb-3">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="input-group mb-3 position-relative">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required onkeyup="checkPasswordStrength()">
+                        <span class="input-group-text position-absolute" style="right: 0; top: 0; height: 100%; cursor: pointer;" onclick="togglePassword()">
+                            <i id="eye-icon" class="feather icon-eye"></i>
+                        </span>
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div class="input-group mb-4">
+                        <input type="password" id="confirm-password" name="confirm_password" class="form-control" placeholder="Confirm Password" required onkeyup="checkPasswordMatch()">
+                    </div>
+
+                    <!-- Password Strength Indicator -->
+                    <div id="password-strength" class="mb-3 text-left">
+                        <ul>
+                            <li id="length" class="invalid"><i class="feather icon-x"></i> At least 8 characters</li>
+                            <li id="uppercase" class="invalid"><i class="feather icon-x"></i> At least one uppercase letter</li>
+                            <li id="lowercase" class="invalid"><i class="feather icon-x"></i> At least one lowercase letter</li>
+                            <li id="number" class="invalid"><i class="feather icon-x"></i> At least one number</li>
+                            <li id="symbol" class="invalid"><i class="feather icon-x"></i> At least one special char (e.g.,@,!)</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary shadow-2 mb-4">Sign up</button>
+                    <p class="mb-0 text-muted">Already have an account? <a href="{{ url_for('auth.login') }}">login here</a>
+                    </p>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="alert alert-{{ messages[0][0] }} alert-dismissible fade show" role="alert">
+                                {{ messages[0][1] }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                  
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+function togglePassword() {
+    var passwordField = document.getElementById('password');
+    var confirmPasswordField = document.getElementById('confirm-password');
+    var eyeIcon = document.getElementById('eye-icon');
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        confirmPasswordField.type = 'text';
+        eyeIcon.className = 'feather icon-eye-off';
+    } else {
+        passwordField.type = 'password';
+        confirmPasswordField.type = 'password';
+        eyeIcon.className = 'feather icon-eye';
+    }
+}
+
+function checkPasswordStrength() {
+    var password = document.getElementById('password').value;
+    var length = document.getElementById('length');
+    var uppercase = document.getElementById('uppercase');
+    var lowercase = document.getElementById('lowercase');
+    var number = document.getElementById('number');
+    var symbol = document.getElementById('symbol');
+
+    var lengthRequirement = password.length >= 8;
+    var uppercaseRequirement = /[A-Z]/.test(password);
+    var lowercaseRequirement = /[a-z]/.test(password);
+    var numberRequirement = /\d/.test(password);
+    var symbolRequirement = /[@$!%*?&]/.test(password);
+
+    length.className = lengthRequirement ? 'valid' : 'invalid';
+    uppercase.className = uppercaseRequirement ? 'valid' : 'invalid';
+    lowercase.className = lowercaseRequirement ? 'valid' : 'invalid';
+    number.className = numberRequirement ? 'valid' : 'invalid';
+    symbol.className = symbolRequirement ? 'valid' : 'invalid';
+    
+    length.innerHTML = lengthRequirement ? '<i class="feather icon-check"></i> At least 8 characters' : '<i class="feather icon-x"></i> At least 8 characters';
+    uppercase.innerHTML = uppercaseRequirement ? '<i class="feather icon-check"></i> At least one uppercase letter' : '<i class="feather icon-x"></i> At least one uppercase letter';
+    lowercase.innerHTML = lowercaseRequirement ? '<i class="feather icon-check"></i> At least one lowercase letter' : '<i class="feather icon-x"></i> At least one lowercase letter';
+    number.innerHTML = numberRequirement ? '<i class="feather icon-check"></i> At least one number' : '<i class="feather icon-x"></i> At least one number';
+    symbol.innerHTML = symbolRequirement ? '<i class="feather icon-check"></i> At least one special char (e.g., @,!)' : '<i class="feather icon-x"></i> At least one special character (e.g., @, $, !)';
+}
+
+function checkPasswordMatch() {
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirm-password').value;
+    var confirmPasswordField = document.getElementById('confirm-password');
+    if (password !== confirmPassword) {
+        confirmPasswordField.style.borderColor = 'red';
+    } else {
+        confirmPasswordField.style.borderColor = 'green';
+    }
+}
+
+function validateForm() {
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirm-password').value;
+    var strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return false;
+    }
+
+    if (!strongPassword.test(password)) {
+        alert('Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, and one symbol.');
+        return false;
+    }
+
+    return true;
+}
+</script>
+{% endblock javascripts %}
