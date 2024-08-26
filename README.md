@@ -21,5 +21,5 @@ Push Up Logger is a Flask-based web application that allows users to log their p
 
 1. **Clone the repository**:
    ```bash
-   git clone <https://github.com/ZakiDhiblawe/push_up>
+   git clone https://github.com/ZakiDhiblawe/push_up
    cd push_up_logger
