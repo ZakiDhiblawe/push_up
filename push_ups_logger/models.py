@@ -7,6 +7,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(200), unique=True)
     name = db.Column(db.String(200))
     password = db.Column(db.String(200))
+    reset_token = db.Column(db.String(100), nullable=True)
     profile_picture = db.Column(db.String(200), nullable=True, default='default.jpg')  # New field
     workouts = db.relationship('Workout', backref='author', lazy=True)
 

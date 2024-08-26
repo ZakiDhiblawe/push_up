@@ -3,6 +3,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . models import User 
 from . import db
 from flask_login import  login_user, logout_user, login_required
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_mail import Message
+from . import db, mail
+from .models import User
+import secrets
+import os
 
 auth = Blueprint('auth', __name__)
 
@@ -66,6 +72,51 @@ def signup_post():
     flash('Registration successful! Please log in.', 'success')
     return redirect(url_for('auth.login'))
     
+
+@auth.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = secrets.token_urlsafe(20)
+            user.reset_token = token
+            db.session.commit()
+
+            reset_link = url_for('auth.reset_password', token=token, _external=True)
+            msg = Message('Password Reset Request',
+                  sender='Maarta17@@gmail.com',
+                  recipients=[user.email])
+            msg.body = f'''To reset your password, visit the following link:
+            {reset_link}
+ 
+            If you did not make this request, simply ignore this email and no changes will be made.
+            '''
+            mail.send(msg)
+
+            flash('A password reset link has been sent to your email.', 'success')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Email not found.', 'danger')
+    return render_template('home/forgot_password.html')
+
+
+@auth.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user = User.query.filter_by(reset_token=token).first_or_404()
+    if request.method == 'POST':
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        if new_password != confirm_password:
+            flash('Passwords do not match.', 'danger')
+        else:
+            user.password = generate_password_hash(new_password, method='pbkdf2:sha256')
+            user.reset_token = None
+            db.session.commit()
+            flash('Your password has been updated. You can now log in with your new password.', 'success')
+            return redirect(url_for('auth.login'))
+    return render_template('home/reset_password.html', token=token)
 
 
 
