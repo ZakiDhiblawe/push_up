@@ -148,7 +148,6 @@ def update_info():
         current_user.name = request.form.get('name')
         db.session.commit()
         flash('Your profile information has been updated')
-
     return redirect(url_for('main.profile'))
 
 
