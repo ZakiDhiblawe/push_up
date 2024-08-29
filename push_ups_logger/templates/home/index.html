@@ -84,7 +84,7 @@
                                 </div>
                             </div>
                             <!-- Total Workouts -->
-                            <div class="col-xl-8 col-md-12 m-b-30">
+                            <div class="col-xl-12">
 
                                 <div class="card-block px-0 py-3">
 
@@ -111,23 +111,29 @@
                                                             <h6 class="m-0"> {{ loop.index }}</h6>
                                                         </td>
                                                         <td>
-                                                            <h6 class="m-0">{{ workout.pushups }}</h6>
+                                                            <h6 class="m-0 text-c-red"><b>{{ workout.pushups }}</b></h6>
                                                         </td>
                                                         <td>
-                                                            <h6 class="m-0">{{ workout.date_posted.strftime('%m/%d/%Y')
+                                                            <h6 class="m-0">{{workout.date_posted.strftime('%d %B %Y, %I:%M %p, %A')
                                                                 }}</h6>
                                                         </td>
                                                         <td>
-                                                            <h6 class="m-0 text-c-red">{{ workout.comment }}</h6>
+                                                            <h6 class="m-0 ">{{ workout.comment }}</h6>
                                                         </td>
                                                         <td>
                                                             <h6 class="m-0 text-c-red">
-                                                                <a href="{{ url_for('main.update_workout', workout_id=workout.id)}}"
-                                                                    class="btn btn-info" role="button">Edit</a>
-                                                                <a href="{{ url_for('main.del_dash', workout_id=workout.id)}}"
-                                                                    class="btn btn-danger" role="button">Delete</a>
-
+                                                              <!-- Edit button with alert -->
+                                                              <a href="{{ url_for('main.update_workout', workout_id=workout.id)}}" 
+                                                                 class="btn btn-info" role="button"
+                                                                 onclick="return confirmEdit();">Edit</a>
+                                                          
+                                                              <!-- Delete button with alert -->
+                                                              <a href="{{ url_for('main.delete_workout', workout_id=workout.id)}}" 
+                                                                 class="btn btn-danger" role="button"
+                                                                 onclick="return confirmDelete();">Delete</a>
                                                             </h6>
+                                                          </td>
+                                                          
                                                         </td>
                                                     </tr>
 
@@ -212,6 +218,16 @@
 
 
 </script>
+<script>
+    function confirmEdit() {
+      return confirm('Are you sure you want to edit this workout?');
+    }
+  
+    function confirmDelete() {
+      return confirm('Are you sure you want to delete this workout? This action cannot be undone.');
+    }
+  </script>
+  
 
 
 

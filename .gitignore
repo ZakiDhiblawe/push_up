@@ -7,3 +7,9 @@ migrations/
 .env
 .DS_Store
 Thumbs.db
+venv/
+__pycache__/
+instance/
+.env
+firebase_credentials.json
+backup.sql
