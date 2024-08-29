@@ -1,3 +1,4 @@
+# run this file when you want to generate a secret key for the project
 import secrets
 
 def generate_secret_key(length=64):
