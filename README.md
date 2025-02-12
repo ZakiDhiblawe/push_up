@@ -1,4 +1,3 @@
-
 # Push Up Logger
 
 Push Up Logger is a Flask-based web application designed to help users log their push-up workouts, track progress over time, and manage their profiles. The application integrates with Firebase for storing profile pictures and PostgreSQL for managing user and workout data.
@@ -51,7 +50,7 @@ Create and activate a virtual environment to manage your dependencies:
 For Windows:
 ```bash
 python -m venv venv
-venv\Scriptsctivate
+venv\Scripts\ctivate
 ```
 
 For macOS/Linux:
